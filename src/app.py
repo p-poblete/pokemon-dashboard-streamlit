@@ -238,5 +238,5 @@ if menu == "Añadir Pokemon":
 
                 with c4:
                     if st.button("Borrar", width="stretch", key=f"btn_del_{index}"):
-                        df_basico_tmp.drop(index).to_csv('pokemon_data.csv', index=False)
+                        df_basico_tmp.drop(index).to_csv(csv_basico, index=False)
                         st.rerun()
