@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-equipo_df = pd.read_csv('pokemon_data.csv', index_col=False)
+equipo_df = pd.read_csv('data/pokemon_data.csv', index_col=False)
 #equipo_df.describe()
 #nombres = equipo_df['nombre'].copy()
 
@@ -19,7 +19,7 @@ tipos2 = ["Ninguno", "Acero","Agua","Bicho","Dragón","Eléctrico","Fantasma","F
 "Hielo","Lucha","Normal","Planta","Psíquico","Roca","Siniestro","Tierra","Veneno",
 "Volador"]
 
-@st.dialog("Editar Datos Generales")
+@st.dialog("Editar Datos Generales", width="medium")
 def editar_general(pokemon_data, index, df_original):
     mote_valido = pd.notna(pokemon_data['mote']) and str(pokemon_data['mote']).strip() != ""
     if mote_valido:
@@ -41,6 +41,22 @@ def editar_general(pokemon_data, index, df_original):
         idx3 = naturalezas.index(pokemon_data['naturaleza']) if pokemon_data['naturaleza'] in tipos2 else 0
         e_naturaleza = st.selectbox("Naturaleza", naturalezas, index=idx3)
         e_habilidad = st.text_input("Habilidad", value=pokemon_data['habilidad'])
+
+    ivs, evs = st.columns(2, border=True)
+    with ivs: 
+        e_iv_ps = st.slider("IV PS", 1, 31, int(pokemon_data['iv_ps']))
+        e_iv_atq = st.slider("IV Ataque", 1, 31, int(pokemon_data['iv_atq']))
+        e_iv_def = st.slider("IV Defensa", 1, 31, int(pokemon_data['iv_def']))
+        e_iv_atq_esp = st.slider("IV At. Especial", 1, 31, int(pokemon_data['iv_atq_esp']))
+        e_iv_def_esp = st.slider("IV def. Especial", 1, 31, int(pokemon_data['iv_def_esp']))
+        e_iv_vel = st.slider("IV Velocidad", 1, 31, int(pokemon_data['iv_velo']))
+    with evs:    
+        e_ev_ps = st.number_input("EV PS", 1, 252, int(pokemon_data['ev_ps']))
+        e_ev_atq = st.number_input("EV Ataque", 1, 252, int(pokemon_data['ev_atq']))
+        e_ev_def = st.number_input("EV Defensa", 1, 252, int(pokemon_data['ev_def']))
+        e_ev_atq_esp = st.number_input("EV At. Especial", 1, 252, int(pokemon_data['ev_atq_esp']))
+        e_ev_def_esp = st.number_input("EV def. Especial", 1, 252, int(pokemon_data['ev_def_esp']))
+        e_ev_vel = st.number_input("EV Velocidad", 1, 252, int(pokemon_data['ev_velo']))
     
     if st.button("Guardar Inf. General", type="primary", width="stretch"):
         df_original.at[index, 'mote'] = nuevo_mote
@@ -86,9 +102,6 @@ def editar_evs(pokemon_data, index, df_original):
         df_original.at[index, 'ev_ps'] = n_ev_ps
         df_original.to_csv('pokemon_data.csv', index=False)
         st.rerun()
-
-# print(equipo_df.head())
-# print(nombres)
 
 st.set_page_config(layout="wide")
 
@@ -146,31 +159,31 @@ if menu == "Añadir Pokemon":
                 np_ev_vel = st.number_input("EV Velocidad", 1, 252)
             np_subido = st.form_submit_button(label="Subir Nuevo Pokemon", type="primary", width="stretch")
     with existentes:
-        ex_temp = pd.read_csv('pokemon_data.csv')
+        ex_temp = pd.read_csv('data/pokemon_data.csv')
         st.subheader(body="Pokemon's Registrados", divider="red")
         for index, row in ex_temp.iterrows():
             with st.container(border=True):
                 label = f"{row['mote']} ({row['nombre']})" if pd.notnull(row['mote']) else row['nombre']
                 st.write(label, )
 
-                c1, c2 = st.columns(spec=2, gap="small")
+                c1, c4 = st.columns(spec=2, gap="small")
 
                 with c1:
-                    if st.button("Gen", width="stretch", key=f"btn_g_{index}"):
+                    if st.button("Editar", width="stretch", key=f"btn_g_{index}"):
                         editar_general(row, index, ex_temp)
                 
-                with c2:
-                    if st.button("IVs", width="stretch", key=f"btn_iv_{index}"):
-                        editar_ivs(row, index, ex_temp)
+                # with c2:
+                #    if st.button("IVs", width="stretch", key=f"btn_iv_{index}"):
+                #        editar_ivs(row, index, ex_temp)
 
-                c3, c4 = st.columns(spec=2, gap="small")
+                # c3, c4 = st.columns(spec=2, gap="small")
 
-                with c3:
-                    if st.button("EVs", width="stretch", key=f"btn_ev_{index}"):
-                        editar_evs(row, index, ex_temp)
+                # with c3:
+                #    if st.button("EVs", width="stretch", key=f"btn_ev_{index}"):
+                #        editar_evs(row, index, ex_temp)
 
                 with c4:
                     # Corregido: usamos ex_temp en lugar de df_temp
-                    if st.button("🗑️", width="stretch", key=f"btn_del_{index}"):
+                    if st.button("Borrar", width="stretch", key=f"btn_del_{index}"):
                         ex_temp.drop(index).to_csv('pokemon_data.csv', index=False)
                         st.rerun()
