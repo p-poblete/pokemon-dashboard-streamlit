@@ -82,7 +82,7 @@ def editar_general(pokemon_data, index, df_edit):
         df_edit.at[index, 'ev_def'] = e_ev_def
         df_edit.at[index, 'ev_atq_esp'] = e_ev_atq_esp
         df_edit.at[index, 'ev_def_esp'] = e_ev_def_esp
-        df_edit.at[index, 'ev_velo'] = e_iv_vel
+        df_edit.at[index, 'ev_velo'] = e_ev_vel
 
         df_edit.to_csv(csv_basico, index=False)
         st.rerun()
@@ -143,6 +143,7 @@ st.title("Dashboard Equipo PokeMMO")
 menu = st.sidebar.radio("Opciones", ["Visualizar Equipo", "Añadir Pokemon"])
 if menu == "Añadir Pokemon":
     st.caption("CRUD MAMALON")
+    df_basico_tmp = pd.read_csv(csv_basico)
     nuevo, existentes = st.columns([3, 1], border=True)
     with nuevo:
         with st.form(key="nuevo_poke", enter_to_submit=False, border=False, width="stretch"):
@@ -182,10 +183,39 @@ if menu == "Añadir Pokemon":
                 np_ev_def_esp = st.number_input("EV def. Especial", 1, 252)
                 np_ev_vel = st.number_input("EV Velocidad", 1, 252)
             np_subido = st.form_submit_button(label="Subir Nuevo Pokemon", type="primary", width="stretch")
+            if np_subido:
+                n_fila = {
+                    'id' : np_id,
+                    'nombre' : np_nombre,
+                    'mote' : np_mote,
+                    'nivel' : np_nivel,
+
+                    'tipo1' : np_tipo1,
+                    'tipo2' : np_tipo2,
+                    'naturaleza' : np_naturaleza,
+                    'habilidad' : np_habilidad,
+
+                    'iv_ps' : np_iv_ps,
+                    'iv_atq' : np_iv_atq,
+                    'iv_def' : np_iv_def,
+                    'iv_atq_esp' : np_iv_atq_esp,
+                    'iv_def_esp' : np_iv_def_esp,
+                    'iv_velo' : np_iv_vel,
+
+                    'ev_ps' : np_ev_ps,
+                    'ev_atq' : np_ev_atq,
+                    'ev_def' : np_ev_def,
+                    'ev_atq_esp' : np_ev_atq_esp,
+                    'ev_def_esp' : np_ev_def_esp,
+                    'ev_velo' : np_ev_vel,
+                }
+                df_nuevo = pd.DataFrame([n_fila])
+                df_basico_tmp = pd.concat([df_basico_tmp, df_nuevo], ignore_index=True)
+                df_basico_tmp.to_csv(csv_basico, index=False)
+                st.rerun()
     with existentes:
-        ex_temp = pd.read_csv(csv_basico)
         st.subheader(body="Pokemon's Registrados", divider="red")
-        for index, row in ex_temp.iterrows():
+        for index, row in df_basico_tmp.iterrows():
             with st.container(border=True):
                 label = f"{row['mote']} ({row['nombre']})" if pd.notnull(row['mote']) else row['nombre']
                 st.write(label, )
@@ -194,19 +224,19 @@ if menu == "Añadir Pokemon":
 
                 with c1:
                     if st.button("Editar", width="stretch", key=f"btn_g_{index}"):
-                        editar_general(row, index, ex_temp)
+                        editar_general(row, index, df_basico_tmp)
                 
                 # with c2:
                 #    if st.button("IVs", width="stretch", key=f"btn_iv_{index}"):
-                #        editar_ivs(row, index, ex_temp)
+                #        editar_ivs(row, index, df_basico_tmp)
 
                 # c3, c4 = st.columns(spec=2, gap="small")
 
                 # with c3:
                 #    if st.button("EVs", width="stretch", key=f"btn_ev_{index}"):
-                #        editar_evs(row, index, ex_temp)
+                #        editar_evs(row, index, df_basico_tmp)
 
                 with c4:
                     if st.button("Borrar", width="stretch", key=f"btn_del_{index}"):
-                        ex_temp.drop(index).to_csv('pokemon_data.csv', index=False)
+                        df_basico_tmp.drop(index).to_csv('pokemon_data.csv', index=False)
                         st.rerun()
