@@ -1,0 +1,5 @@
+id,mote,nombre,tipo1,tipo2,naturaleza,habilidad,iv_ps,iv_atq,iv_def,iv_atq_esp,iv_def_esp,iv_velo,ev_ps,ev_atq,ev_def,ev_atq_esp,ev_def_esp,ev_velo,nivel
+472,,Gliscor,Tierra,Volador,Agitada,Velo Arena,13,30,18,28,24,16,35,252,143,32,17,20,67
+563,RAM.cs,Cofagrigus,Fantasma,,Cauta,Momia,13,25,31,2,19,11,11,252,106,10,2,3,47
+225,,Delibird,hielo,Volador,Miedosa,Entusiasmo,24,24,25,26,31,4,2,1,5,2,3,14,48
+596,,Galvantula,Bicho,Eléctrico,Floja,Nerviosismo,9,31,1,31,5,31,20,189,15,40,70,65,41
