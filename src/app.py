@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-equipo_df = pd.read_csv('data/pokemon_data.csv', index_col=False)
+csv_basico = 'data/pokemon_data.csv'
+equipo_df = pd.read_csv(csv_basico, index_col=False)
 #equipo_df.describe()
 #nombres = equipo_df['nombre'].copy()
 
@@ -20,7 +21,7 @@ tipos2 = ["Ninguno", "Acero","Agua","Bicho","Dragón","Eléctrico","Fantasma","F
 "Volador"]
 
 @st.dialog("Editar Datos Generales", width="medium")
-def editar_general(pokemon_data, index, df_original):
+def editar_general(pokemon_data, index, df_edit):
     mote_valido = pd.notna(pokemon_data['mote']) and str(pokemon_data['mote']).strip() != ""
     if mote_valido:
         st.subheader(f"Inf. General de: {pokemon_data['mote']} ({pokemon_data['nombre']})")
@@ -59,8 +60,31 @@ def editar_general(pokemon_data, index, df_original):
         e_ev_vel = st.number_input("EV Velocidad", 1, 252, int(pokemon_data['ev_velo']))
     
     if st.button("Guardar Inf. General", type="primary", width="stretch"):
-        df_original.at[index, 'mote'] = nuevo_mote
-        df_original.to_csv('pokemon_data.csv', index=False)
+        df_edit.at[index,'id'] = e_id
+        df_edit.at[index,'nombre'] = e_nombre
+        df_edit.at[index, 'mote'] = e_mote
+        df_edit.at[index,'nivel'] = e_nivel
+
+        df_edit.at[index, 'tipo1'] = e_tipo1
+        df_edit.at[index, 'tipo2'] = e_tipo2
+        df_edit.at[index, 'naturaleza'] = e_naturaleza
+        df_edit.at[index, 'habilidad'] = e_habilidad
+
+        df_edit.at[index, 'iv_ps'] = e_iv_ps
+        df_edit.at[index, 'iv_atq'] = e_iv_atq
+        df_edit.at[index, 'iv_def'] = e_iv_def
+        df_edit.at[index, 'iv_atq_esp'] = e_iv_atq_esp
+        df_edit.at[index, 'iv_def_esp'] = e_iv_def_esp
+        df_edit.at[index, 'iv_velo'] = e_iv_vel
+
+        df_edit.at[index, 'ev_ps'] = e_ev_ps
+        df_edit.at[index, 'ev_atq'] = e_ev_atq
+        df_edit.at[index, 'ev_def'] = e_ev_def
+        df_edit.at[index, 'ev_atq_esp'] = e_ev_atq_esp
+        df_edit.at[index, 'ev_def_esp'] = e_ev_def_esp
+        df_edit.at[index, 'ev_velo'] = e_iv_vel
+
+        df_edit.to_csv(csv_basico, index=False)
         st.rerun()
 
 @st.dialog("Editar IVs")
@@ -159,7 +183,7 @@ if menu == "Añadir Pokemon":
                 np_ev_vel = st.number_input("EV Velocidad", 1, 252)
             np_subido = st.form_submit_button(label="Subir Nuevo Pokemon", type="primary", width="stretch")
     with existentes:
-        ex_temp = pd.read_csv('data/pokemon_data.csv')
+        ex_temp = pd.read_csv(csv_basico)
         st.subheader(body="Pokemon's Registrados", divider="red")
         for index, row in ex_temp.iterrows():
             with st.container(border=True):
@@ -183,7 +207,6 @@ if menu == "Añadir Pokemon":
                 #        editar_evs(row, index, ex_temp)
 
                 with c4:
-                    # Corregido: usamos ex_temp en lugar de df_temp
                     if st.button("Borrar", width="stretch", key=f"btn_del_{index}"):
                         ex_temp.drop(index).to_csv('pokemon_data.csv', index=False)
                         st.rerun()
