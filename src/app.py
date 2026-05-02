@@ -142,7 +142,7 @@ st.title("Dashboard Equipo PokeMMO")
 
 menu = st.sidebar.radio("Opciones", ["Visualizar Equipo", "Añadir Pokemon"])
 if menu == "Añadir Pokemon":
-    st.caption("CRUD MAMALON")
+    st.caption("AQUI PUEDES AÑADIR NUEVOS POKES, EDITAR O BORRAR LOS YA REGISTRADOS")
     df_basico_tmp = pd.read_csv(csv_basico)
     nuevo, existentes = st.columns([3, 1], border=True)
     with nuevo:
