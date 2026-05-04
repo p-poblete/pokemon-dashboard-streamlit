@@ -12,7 +12,7 @@
 2. Generar visualizaciones que ayuden al análisis del equipo y los Pokémon's que lo componen.
 3. Operaciones CRUD que permitan subir los datos de Pokémon's a un sistema persistente.
 
-## 5. Alcance
+## 4. Alcance
 - **Incluye**: CRUD de datos, navegación y visualizaciones clave. 
 
 - **No incluye**: Autenticación de usuarios, integracion con API's de Pokémon o cálculo dinámico de daño.
